@@ -1,12 +1,21 @@
 <?php namespace com\adobe\pdf;
 
-use io\streams\InputStream;
+use io\streams\{InputStream, SequenceInputStream};
 
 class Content {
   private $tokens;
 
-  public function __construct(InputStream $in) {
-    $this->tokens= new Tokens($in);
+  /** @param io.streams.InputStream|com.adobe.Stream... $in */
+  public function __construct(... $in) {
+    if (1 === sizeof($in)) {
+      $this->tokens= new Tokens($in[0]);
+    } else {
+      $streams= [];
+      foreach ($in as $arg) {
+        $streams[]= $arg instanceof InputStream ? $arg : $arg->input();
+      }
+      $this->tokens= new Tokens(new SequenceInputStream($streams));
+    }
   }
 
   public function operations(): iterable {
