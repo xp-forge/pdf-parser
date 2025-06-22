@@ -11,15 +11,26 @@ class Ref implements Value {
     $this->generation= $generation;
   }
 
+  /** @return string */
   public function hashCode() {
     return $this->number.'_'.$this->generation;
   }
 
+  /** @return string */
   public function toString() {
     return nameof($this).'('.$this->number.'_'.$this->generation.')';
   }
 
+  /**
+   * Comparison
+   *
+   * @param  var $value
+   * @return int
+   */
   public function compareTo($value) {
-    return $value instanceof self ? $this->hashCode() <=> $value->hashCode() : 1;
+    return $value instanceof self
+      ? $this->number.'_'.$this->generation <=> $value->number.'_'.$value->generation
+      : 1
+    ;
   }
 }

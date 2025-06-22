@@ -10,7 +10,7 @@ class CharacterMap {
   public $chars= [], $ranges= [];
   public $codespace= [0x0000, 0xffff];
 
-  public function __construct(InputStream $in) {
+  public function __construct(InputStream|Stream $in) {
     $this->tokens= new Tokens($in);
   }
 

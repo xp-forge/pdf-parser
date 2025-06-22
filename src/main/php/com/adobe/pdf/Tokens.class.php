@@ -7,8 +7,8 @@ class Tokens {
   private $in;
   private $buffer= '';
 
-  public function __construct(InputStream $in) {
-    $this->in= $in;
+  public function __construct(InputStream|Stream $in) {
+    $this->in= $in instanceof InputStream ? $in : $in->input();
   }
 
   public function push(string $buffer) {
