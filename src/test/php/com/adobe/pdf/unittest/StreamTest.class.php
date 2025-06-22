@@ -28,19 +28,19 @@ class StreamTest {
 
   #[Test]
   public function flatedecode_bytes() {
-    Assert::equals(self::PLAIN, (new Stream(self::DEFLATED, 'FlateDecode'))->bytes());
+    Assert::equals(self::PLAIN, (new Stream(self::DEFLATED, ['FlateDecode']))->bytes());
   }
 
   #[Test]
   public function flatedecode_stream() {
-    Assert::equals(self::PLAIN, Streams::readAll((new Stream(self::DEFLATED, 'FlateDecode'))->input()));
+    Assert::equals(self::PLAIN, Streams::readAll((new Stream(self::DEFLATED, ['FlateDecode']))->input()));
   }
 
   #[Test]
   public function flatedecode_string_representation() {
     Assert::equals(
       'com.adobe.pdf.Stream(8 bytes FlateDecode)',
-      (new Stream(self::DEFLATED, 'FlateDecode'))->toString()
+      (new Stream(self::DEFLATED, ['FlateDecode']))->toString()
     );
   }
 }

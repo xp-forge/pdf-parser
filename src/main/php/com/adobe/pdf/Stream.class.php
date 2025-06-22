@@ -2,45 +2,61 @@
 
 use io\streams\MemoryInputStream;
 use io\streams\compress\InflatingInputStream;
-use lang\Value;
+use lang\{Value, IllegalArgumentException};
 use util\Objects;
 
 /** @test com.adobe.pdf.unittest.StreamTest */
 class Stream implements Value {
   const ZLIB_HEADER= 2;
 
-  private $bytes, $filter;
+  private $bytes, $filters;
 
   /**
    * Creates a new stream
    *
    * @param  string $bytes
-   * @param  ?string $filter
+   * @param  string[] $filters
    */
-  public function __construct($bytes, $filter= null) {
+  public function __construct($bytes, $filters= []) {
     $this->bytes= $bytes;
-    $this->filter= $filter;
+    $this->filters= (array)$filters;
   }
 
   /** @return string */
-  public function bytes() {
-    switch ($this->filter) {
-      case null: return $this->bytes;
-      case 'DCTDecode': case 'JPXDecode': case 'CCITTFaxDecode': return $this->bytes;
-      case 'FlateDecode': return gzinflate(substr($this->bytes, self::ZLIB_HEADER));
-      default: throw new IllegalArgumentException('Unknown filter '.$this->filter);
+  public function bytes($filters= true) {
+    if (!$filters || empty($this->filters)) return $this->bytes;
+
+    $bytes= $this->bytes;
+    foreach ($this->filters as $filter) {
+      switch ($filter) {
+        case 'FlateDecode':
+          $bytes= gzinflate(substr($bytes, self::ZLIB_HEADER));
+          break;
+
+        default:
+          throw new IllegalArgumentException('Unsupported filter '.$filter);
+      }
     }
+    return $bytes;
   }
 
   /** @return io.streams.InputStream */
-  public function input() {
+  public function input($filters= true) {
     $input= new MemoryInputStream($this->bytes);
-    if ('FlateDecode' === $this->filter) {
-      $input->read(self::ZLIB_HEADER);
-      return new InflatingInputStream($input);
-    } else {
-      return $input;
+    if (!$filters || empty($this->filters)) return $input;
+
+    foreach ($this->filters as $filter) {
+      switch ($filter) {
+        case 'FlateDecode':
+          $input->read(self::ZLIB_HEADER);
+          $input= new InflatingInputStream($input);
+          break;
+
+        default:
+          throw new IllegalArgumentException('Unsupported filter '.$filter);
+      }
     }
+    return $input;
   }
 
   /** @return string */
@@ -50,7 +66,12 @@ class Stream implements Value {
 
   /** @return string */
   public function toString() {
-    return nameof($this).'('.strlen($this->bytes).' bytes '.($this->filter ?? 'Plain').')';
+    return sprintf(
+      '%s(%d bytes %s)',
+      nameof($this),
+      strlen($this->bytes),
+      $this->filters ? implode(' > ', $this->filters) : 'Plain'
+    );
   }
 
   /**
