@@ -25,12 +25,12 @@ class ContentTest {
         ['Tj' => [['string', 'Test']]],
         ['ET' => []],
       ],
-      $this->parse(<<<'PS'
-        BT
-        /R13 60 Tf
-        (Test)Tj
-        ET
-      PS)
+      $this->parse(
+        "BT\n".
+        "/R13 60 Tf\n".
+        "(Test)Tj\n".
+        "ET\n"
+      )
     );
   }
 

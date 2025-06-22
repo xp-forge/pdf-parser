@@ -7,7 +7,8 @@ class Tokens {
   private $in;
   private $buffer= '';
 
-  public function __construct(InputStream|Stream $in) {
+  /** @param io.streams.InputStream|com.adobe.Stream $in */
+  public function __construct($in) {
     $this->in= $in instanceof InputStream ? $in : $in->input();
   }
 

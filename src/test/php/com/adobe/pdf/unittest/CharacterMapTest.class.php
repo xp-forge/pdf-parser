@@ -2,39 +2,44 @@
 
 use com\adobe\pdf\CharacterMap;
 use io\streams\MemoryInputStream;
-use test\{Assert, Test, Values};
+use test\{Assert, Before, Test, Values};
 
 class CharacterMapTest {
-  private $definition= <<<'MULTIBYTE'
-    /CIDInit /ProcSet findresource begin
-    12 dict begin
-    begincmap
-    /CIDSystemInfo
-    << /Registry (Adobe)
-    /Ordering (UCS)
-    /Supplement 0
-    >> def
-    /CMapName
-    /Adobe-Identity-UCS def
-    /CMapType 2 def
-    1 begincodespacerange
-    <0000> <FFFF>
-    endcodespacerange
-    4 beginbfchar
-    <0003> <0054>
-    <000F> <0065>
-    <0011> <0073>
-    <0012> <007400650064>
-    endbfchar
-    2 beginbfrange
-    <0013> <001C> <0030>
-    <03E0> <03E1> [<002C> <003A>]
-    endbfrange
-    endcmap
-    CMapName currentdict /CMap defineresource pop
-    end
-    end
-  MULTIBYTE;
+  private $definition;
+
+  #[Before]
+  public function definition() {
+    $this->definition= (
+      "/CIDInit /ProcSet findresource begin\n".
+      "12 dict begin\n".
+      "begincmap\n".
+      "/CIDSystemInfo\n".
+      "<< /Registry (Adobe)\n".
+      "/Ordering (UCS)\n".
+      "/Supplement 0\n".
+      ">> def\n".
+      "/CMapName\n".
+      "/Adobe-Identity-UCS def\n".
+      "/CMapType 2 def\n".
+      "1 begincodespacerange\n".
+      "<0000> <FFFF>\n".
+      "endcodespacerange\n".
+      "4 beginbfchar\n".
+      "<0003> <0054>\n".
+      "<000F> <0065>\n".
+      "<0011> <0073>\n".
+      "<0012> <007400650064>\n".
+      "endbfchar\n".
+      "2 beginbfrange\n".
+      "<0013> <001C> <0030>\n".
+      "<03E0> <03E1> [<002C> <003A>]\n".
+      "endbfrange\n".
+      "endcmap\n".
+      "CMapName currentdict /CMap defineresource pop\n".
+      "end\n".
+      "end\n"
+    );
+  }
 
   /** @return iterable */
   private function formats() {

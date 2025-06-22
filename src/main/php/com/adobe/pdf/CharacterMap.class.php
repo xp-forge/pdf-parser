@@ -10,7 +10,8 @@ class CharacterMap {
   public $chars= [], $ranges= [];
   public $codespace= [0x0000, 0xffff];
 
-  public function __construct(InputStream|Stream $in) {
+  /** @param io.streams.InputStream|com.adobe.Stream $in */
+  public function __construct($in) {
     $this->tokens= new Tokens($in);
   }
 
