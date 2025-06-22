@@ -5,14 +5,14 @@ use io\streams\{InputStream, SequenceInputStream};
 class Content {
   private $tokens;
 
-  /** @param io.streams.InputStream|com.adobe.Stream... $in */
-  public function __construct(... $in) {
-    if (1 === sizeof($in)) {
-      $this->tokens= new Tokens($in[0]);
+  /** @param io.streams.InputStream|com.adobe.Stream... $sources */
+  public function __construct(... $sources) {
+    if (1 === sizeof($sources)) {
+      $this->tokens= new Tokens($sources[0]);
     } else {
       $streams= [];
-      foreach ($in as $arg) {
-        $streams[]= $arg instanceof InputStream ? $arg : $arg->input();
+      foreach ($sources as $source) {
+        $streams[]= $source instanceof InputStream ? $source : $source->input();
       }
       $this->tokens= new Tokens(new SequenceInputStream($streams));
     }
