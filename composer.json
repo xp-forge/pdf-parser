@@ -7,7 +7,7 @@
   "keywords": ["module", "xp"],
   "require" : {
     "xp-framework/core": "^12.5 | ^11.10",
-    "xp-forge/compression": "^1.3",
+    "xp-forge/compression": "^2.0 | ^1.3",
     "php" : ">=7.4.0"
   },
   "require-dev" : {
