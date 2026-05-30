@@ -29,7 +29,7 @@ class CharacterMap {
           $length= $token[1];
         } else if ('word' === $token[0] && 1 === sscanf($token[1], 'begin%s', $type)) {
           switch ($type) {
-            case 'cmap';
+            case 'cmap':
               break;
 
             case 'codespacerange':
